@@ -1,5 +1,8 @@
-# Compiled class file
+# Compiled Java class files
 *.class
+
+# Auto-generated output files
+output.txt
 
 # Log file
 *.log

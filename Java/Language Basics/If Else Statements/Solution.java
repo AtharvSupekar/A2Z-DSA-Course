@@ -1,7 +1,7 @@
 import java.util.Scanner;
 /*
- * A school has following rules tor grading systeu:
- *  a. Below 25 - F
+    A school has following rules tor grading systeu:
+    a. Below 25 - F
 
     b. 25 to 44 - E
 

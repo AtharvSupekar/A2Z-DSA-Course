@@ -1,50 +1,36 @@
-def merge(arr: list, low: int, mid: int, high: int) -> None:
-    left, right = low, mid + 1
-    temp = []
-    # Compare and add the smaller element to temp
-    while left <= mid and right <= high:
-        if arr[left] <= arr[right]:
-            temp.append(arr[left])
-            left += 1
-        else:
-            temp.append(arr[right])
-            right += 1
-    # Add any remaining elements is 1st half
-    while left <= mid:
-        temp.append(arr[left])
-        left += 1
-    # Add any remaining elements is 2nd half
-    while right <= high:
-        temp.append(arr[right])
-        right += 1
-    # Copy the merged elements from temp to arr(original)
-    for k in range(low, high + 1):
-        arr[k] = temp[k - low]
+def partition(arr: list, low: int, high: int) -> int:
+    pivot, i, j = arr[low], low, high
 
-def Merge_Sort(arr: list, low: int, high: int) -> None:
+    while i < j:
+        while arr[i] <= pivot and i <= high - 1:
+            i += 1
+        while arr[i] >  pivot and j >= low  + 1:
+            j -= 1
+        if i < j:
+            arr[i], arr[j] = arr[j], arr[i]
+    
+    arr[low], arr[j] = arr[j], arr[low]
+    return j
+
+def Quick_Sort(arr: list, low: int, high: int) -> None:
     """
     Sorts an array using the Merge Sort algorithm.
     
     :param arr: List of elements to be sorted
     :return: Sorted list
     """
-    n = len(arr)
     # Base Condition - 
-    # when reach divided sub array is indivisible (len = 1)
-    if low == high: return
-    # Calculate mid of the array
-    mid = (low + high) // 2
-    # Call Merge Sort on left half
-    Merge_Sort(arr, low, mid)
-    # Call Merge Sort on right half
-    Merge_Sort(arr, mid + 1, high)
-    # Merge both the halves obtained in sorted order
-    merge(arr, low, mid, high)
+    # If low is less than high, there's more than one element to sort
+    if low < high:
+        pIndex = partition(arr, low, high)
+        Quick_Sort(arr, low, pIndex - 1)
+        Quick_Sort(arr, pIndex + 1, high) 
+    
 
 t = int(input())
 while t>0:  
     t -= 1
     arr = list(map(int, input().split()))
 
-    Merge_Sort(arr = arr, low = 0, high = len(arr) - 1)
+    Quick_Sort(arr = arr, low = 0, high = len(arr) - 1)
     print(arr)

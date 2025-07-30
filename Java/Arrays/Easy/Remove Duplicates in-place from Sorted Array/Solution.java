@@ -17,7 +17,7 @@ public class Solution {
                 arr[slow] = arr[fast];
             }
         }
-        return slow+1;
+        return slow+1;  
     }
     
     public static void main(String[] args) {

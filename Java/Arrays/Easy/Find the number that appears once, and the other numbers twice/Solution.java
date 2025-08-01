@@ -1,5 +1,8 @@
 import java.util.Scanner;
-
+/*
+ * TC = O(N)
+ * SC = O(1)
+ */
 public class Solution {
     private static int singleNumber(int[] arr){
         int xor = 0;

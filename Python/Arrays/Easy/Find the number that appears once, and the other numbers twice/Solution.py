@@ -1,6 +1,6 @@
 ''' 
-    TC = O(N+M)
-    SC = O(N+M) - for array union
+    TC = O(N)
+    SC = O(1)
 '''
 
 from typing import List

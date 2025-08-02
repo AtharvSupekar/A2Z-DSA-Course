@@ -2,8 +2,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 /*
- * TC = O(2N)
- * SC = O(1)
+ * TC = O(N)
+ * SC = O(N)
  */
 public class Solution {
     private static void printArray(int[] arr){
@@ -13,54 +13,18 @@ public class Solution {
         }
         System.out.println();
     }
-    private static int[] longestSubarray(int[] arr, int k){
-        long sum = 0;
-        int maxLen = 0, end_of_longest = -1, start_of_longest = -1;
-        Map<Long , Integer> preSumMap = new HashMap<>();
-        preSumMap.put(0L, -1);
-
-        for (int i = 0; i<arr.length; i++){
-            sum += arr[i];
-            if (preSumMap.containsKey(sum - k)){
-                int currentLen = i - preSumMap.get(sum-k);
-                if (currentLen > maxLen){
-                    maxLen = currentLen;
-                    start_of_longest = preSumMap.get(sum - k) + 1;
-                    end_of_longest = i;
-                }
-            }
-            if (!preSumMap.containsKey(sum)){
-                preSumMap.put(sum, i);
-            }
-        }
-        if (start_of_longest != -1) {
-            int length = end_of_longest - start_of_longest + 1;
-            int[] subArray = new int[length];
-            System.arraycopy(arr, start_of_longest, subArray, 0, length);
-            return subArray;
-        }
-        else {
-            return new int[0];
-        }
-    }
-
-    private static int longestSubarray2P(int[] arr, int k){
-        int maxLen = 0;
+    private static int[] twoSum(int[] arr, int sum){
         int n = arr.length;
-        int left = 0, right = 0, sum = 0;
-
-        while (right < n){
-            sum += arr[right];
-            while (sum > k) {
-                sum -= arr[left];
-                left++;
+        Map<Integer,Integer> idx_Map = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            int currentNum = arr[i];
+            int complement = sum - currentNum;
+            if (idx_Map.containsKey(complement)){
+                return new int[] {i, idx_Map.get(complement)};
             }
-            if (sum == k) {
-                maxLen = Math.max(maxLen, right - left + 1);
-            }
-            right++;
+            idx_Map.put(currentNum, i);
         }
-        return maxLen;
+        return new int[] {-1,-1};
     }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -73,9 +37,8 @@ public class Solution {
                 arr[i] = sc.nextInt();
             }
             int k = sc.nextInt();
-            int[] result = longestSubarray(arr, k);
+            int[] result = twoSum(arr, k);
             printArray(result);
-            System.out.println(longestSubarray2P(arr, k));
         }
         sc.close();
     }

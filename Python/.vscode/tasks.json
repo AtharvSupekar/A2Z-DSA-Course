@@ -4,7 +4,7 @@
         {
             "label": "Run Python",
             "type": "shell",
-            "command": "cd '${fileDirname}'; Get-Content input.txt | python '${fileBasename}' > output.txt",
+            "command": "cd '${fileDirname}'; Get-Content input.txt | & 'C:\\Users\\Atharv Supekar\\AppData\\Local\\Programs\\Python\\Python313\\python.exe' '${fileBasename}' > output.txt",
             "group": {
                 "kind": "build",
                 "isDefault": true

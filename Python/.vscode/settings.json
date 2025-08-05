@@ -3,5 +3,8 @@
     "python-envs.pythonProjects": [],
     "python.languageServer": "Pylance",
     "python.analysis.languageServerMode": "full",
-    "emmet.useInlineCompletions": true
+    "emmet.useInlineCompletions": true,
+    "terminal.integrated.env.windows": {
+        "Path": "${env:Path};C:\\Users\\Atharv Supekar\\AppData\\Local\\Programs\\Python\\Python313"
+    }
 }

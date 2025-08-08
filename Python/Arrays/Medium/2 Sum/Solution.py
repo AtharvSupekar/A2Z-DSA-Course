@@ -26,7 +26,6 @@ def Two_Sum_OP(arr: list, k: int) -> list:
         if total < k:
             left += 1
     return [-1, -1]
-            
     
 # Main execution block: Handles input/output for testing
 t = int(input()) # Read number of test cases
@@ -37,3 +36,4 @@ while t > 0:
     k = int(input())
     print(Two_Sum_BF(arr,k))
     print(Two_Sum_OP(arr,k))
+    

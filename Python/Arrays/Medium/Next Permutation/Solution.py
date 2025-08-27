@@ -1,75 +1,45 @@
 """
-    Brute Force Solution
-    TC = O(2N) rather O(1.5N)
-    SC = O(N)
+    Brute Force Solution -
+    Generate all possible combinations and then perform a linear search
+    TC = O(N! * N)
+    SC = O(N!)
 
     For Optimal Solution
     TC = O(N)
-    SC = O(N)
-
-    For Variant Solution
-    TC = O(2N)
-    SC = O(N)
+    SC = O(1)
 """
 from typing import List
 
-def BruteForce(nums: List[int]) -> List[int]:
-    n = len(nums)
-    pos, neg = [], []
-    for num in nums:
-        if num >= 0:
-            pos.append(num)
-        else:
-            neg.append(num)
-    for i in range(n // 2):
-        nums[2 * i] = pos[i]
-        nums[2 * i + 1] = neg[i]
-    return nums
-
-def Optimal(nums: List[int]) -> List[int]:
-    posIdx, negIdx = 0, 1
-    res = [0] * len(nums)
-    for num in nums:
-        if num < 0:
-            res[negIdx] = num
-            negIdx += 2
-        else:
-            res[posIdx] = num
-            posIdx += 2
-    return res
-
-def Variant2(nums: List[int]) -> List[int]:
-    n = len(nums)
-    pos, neg = [], []
-    for num in nums:
-        if num < 0:
-            neg.append(num)
-        else:
-            pos.append(num)
-    if len(pos) > len(neg):
-        for i in range(len(neg)):
-            nums[2 * i] = pos[i]
-            nums[2*i+1] = neg[i]
-        index = 2 * len(neg)
-        for i in range(len(pos) - len(neg)):
-            nums[index] = pos[i + len(neg)]
-            index += 1
-    else:
-        for i in range(len(pos)):
-            nums[2 * i] = pos[i]
-            nums[2*i+1] = neg[i]
-        index = 2 * len(pos)
-        for i in range(len(neg) - len(pos)):
-            nums[index] = neg[i + len(pos)]
-            index += 1
-    return nums
+def next_permutation(arr: List[int]) -> List[int]:
+        n = len(arr)
+        # 1. Find the breakpoint
+        bp = -1
+        for i in range(n - 2, -1, -1):
+            if arr[i] < arr[i+1]:
+                bp = i
+                break
+        # 2. If no breakpoint is found -> return reversed array
+        if bp == -1:
+            arr.reverse()
+            return arr
+        # 2. Find the smallest greater element to swap
+        for i in range(n - 1, bp, -1):
+            if arr[bp] < arr[i]:
+                # 3. Perform the swap
+                arr[bp], arr[i] = arr[i], arr[bp]
+                break
+        # 4. Reverse the part after breakpoint in-place to make it the smallest
+        left, right = bp + 1, n - 1
+        while left < right:
+            arr[left], arr[right] = arr[right], arr[left]
+            left += 1
+            right -= 1
+        return arr
 
 # Main Execution  Block
 t: int = int(input())
 while t > 0:
     t -= 1
-    arr: list[int] = list(map(int, input().split()))
-    # print(BruteForce(arr))
-    # print(Optimal(arr))
-    print(Variant2(arr))
+    perm: list[int] = list(map(int, input().split(" ")))
+    print(next_permutation(perm))
 

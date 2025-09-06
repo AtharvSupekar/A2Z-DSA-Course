@@ -34,7 +34,6 @@ def find_leaders_OP(arr: List[int]) -> List[int]:
     return leaders
 
 
-
 # Main Execution  Block
 t: int = int(input())
 while t > 0:

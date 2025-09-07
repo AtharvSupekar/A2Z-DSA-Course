@@ -1,102 +1,108 @@
 import java.util.Scanner;
 /*
     Brute Force Approach -
-    TC = O(n^2) or O((n * (n + 1)) / 2)
-    SC = O(n) - Worst Case (If array is sorted in descending order)
+    TC = O(M * N)
+    SC = O(M * N)
 
     Optimal Approach -
-    TC = O(n)
-    SC = O(n) - Worst Case (If array is sorted in descending order)
+    TC = O(3(M * N)/4)    # M/2  * N/2(transpose) + MN/2(reverse)
+    SC = O(1) if M == N else O(M * N)
 */
 public class Solution {
     private static void printMatrix(int[][] matrix) {
-        int rows = matrix.length, cols = matrix[0].length;
-        System.out.println("Read matrix of size " + rows + "x" + cols + ":");
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            System.out.println("[]");
+            return;
+        }
+
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        
+        // Find the maximum width of a number for alignment
+        int maxWidth = 0;
+        for (int[] row : matrix) {
+            for (int element : row) {
+                maxWidth = Math.max(maxWidth, String.valueOf(element).length());
+            }
+        }
+
+        for (int i = 0; i < rows; i++) {
+            System.out.print('[');
+            for (int j = 0; j < cols; j++) {
+                // Use printf with a dynamic width specifier
+                System.out.printf("%" + maxWidth + "d", matrix[i][j]);
+                if (j < cols - 1) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.println(']');
+        }
+        System.out.println();
+    }
+    private static int[][] transpose(int[][] matrix, int rows, int cols) {
+        if (rows == cols) {
+            for (int i = 0; i < rows - 1; i++) {
+                for (int j = i + 1; j < cols; j++) {
+                    int temp = matrix[i][j];
+                    matrix[i][j] = matrix[j][i];
+                    matrix[j][i] = temp;
+                }
+            }
+            return matrix;
+        } else {
+            int[][] tp = new int[cols][rows];
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
-                    System.out.print(matrix[i][j] + " ");
+                    tp[j][i] = matrix[i][j];
                 }
-                System.out.println();
             }
-    }
-    private static void markRow(int i, int cols, int[][] matrix) {
-        for (int j = 0; j < cols; j++) {
-            if (matrix[i][j] != 0) {
-                matrix[i][j] = Integer.MIN_VALUE;
-            }
+            return tp;
         }
+        
     }
-    private static void markCol(int j, int rows, int[][] matrix) {
-        for (int i = 0; i < rows; i++) {
-            if (matrix[i][j] != 0) {
-                matrix[i][j] = Integer.MIN_VALUE;
-            }
-        }
-    }
-    private static void setZeroesBF(int[][] mat, int rows, int cols) {
+    private static int[][] rotateMatrixBF(int[][] mat, int rows, int cols, boolean ACW) {
+        int[][] result = new int[cols][rows];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (mat[i][j] == 0) {
-                    markRow(i, cols, mat);
-                    markCol(j, rows, mat);
+                if (ACW){
+                    result[cols - 1 - j][i] = mat[i][j];
+                } else {
+                    result[j][rows - 1 - i] = mat[i][j];
                 }
+                
             }
         }
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mat[i][j] == Integer.MIN_VALUE) {
-                    mat[i][j] = 0;
-                }
-            }
-        }
+        return result;
     }
-    private static void setZeroesBetter(int[][] mat, int rows, int cols) {
-        int[] rowToZero = new int[rows];
-        int[] colToZero = new int[cols];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mat[i][j] == 0) {
-                    rowToZero[i] = 1;
-                    colToZero[j] = 1;
+    private static int[][] rotateMatrixOP(int[][] mat, int rows, int cols, boolean ACW) {
+        // 1. Transpose
+        int[][] tp = transpose(mat, rows, cols);
+        int tpRows = tp.length, tpCols = tp[0].length;
+        // 2. Reverse the rows / cols
+        if (ACW) {
+            for (int j = 0; j < tpCols; j++) {
+                int left = 0, right = tpRows - 1;
+                while (left < right) {
+                    int temp = tp[left][j];
+                    tp[left][j] = tp[right][j];
+                    tp[right][j] = temp;
+                    left++;
+                    right--;
+                }
+            }
+        } else {
+            for (int i = 0; i < tpRows; i++) {
+                int left = 0, right = tpCols - 1;
+                while (left < right) {
+                    int temp = tp[i][left];
+                    tp[i][left] = tp[i][right];
+                    tp[i][right] = temp;
+                    left++;
+                    right--;
                 }
             }
         }
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (rowToZero[i] == 1 || colToZero[j] == 1) {
-                    mat[i][j] = 0;
-                }
-            }
-        }
-    }
-    private static void setZeroesOP(int[][] mat, int rows, int cols) {
-        int col0 = 1;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mat[i][j] == 0) {
-                    mat[i][0] = 0;
-                    if (j != 0)
-                        mat[0][j] = 0;
-                    else 
-                        col0 = 0;
-                }
-            }
-        }
-        for (int i = 1; i < rows; i++) {
-            for (int j = 1; j < cols; j++) {
-                if (mat[0][j] == 0 || mat[i][0] == 0) {
-                    mat[i][j] = 0;
-                }
-            }
-        }
-        if (mat[0][0] == 0) {
-            for (int j = 0; j < cols; j++)
-                mat[0][j] = 0;
-        }
-        if (col0 == 0) {
-            for (int i = 0; i < rows; i++)
-                mat[i][0] = 0;
-        }
+        return tp;
     }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in); 
@@ -112,12 +118,11 @@ public class Solution {
                     matrix[i][j] = sc.nextInt();
                 }
             }
-            // setZeroesBF(matrix, rows, cols);
-            // printMatrix(matrix);
-            // setZeroesBetter(matrix, rows, cols);
-            // printMatrix(matrix);
-            setZeroesOP(matrix, rows, cols);
-            printMatrix(matrix);
+            // int[][] resultBF = rotateMatrixBF(matrix, rows, cols, false);
+            // printMatrix(resultBF);
+            int[][] part2 = rotateMatrixOP(matrix, rows, cols, true);
+            int[][] resultOP = rotateMatrixOP(part2, cols, rows, true);
+            printMatrix(resultOP);
         }
         sc.close();
     }   

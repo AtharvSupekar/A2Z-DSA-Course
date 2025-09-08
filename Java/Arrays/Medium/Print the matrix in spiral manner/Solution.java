@@ -1,14 +1,20 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 /*
-    Brute Force Approach -
-    TC = O(M * N)
-    SC = O(M * N)
-
     Optimal Approach -
-    TC = O(3(M * N)/4)    # M/2  * N/2(transpose) + MN/2(reverse)
-    SC = O(1) if M == N else O(M * N)
+    TC = O(M * N)
+    SC = O(M * N) if list is returned 
+       = O(1) if elements are directly printed
 */
 public class Solution {
+    private static void printArrayList(List<Integer> arr){
+        for (int i = 0; i < arr.size(); i++){
+            System.out.print(arr.get(i) + " ");
+        }
+        System.out.println();
+        System.out.println();
+    }
     private static void printMatrix(int[][] matrix) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
             System.out.println("[]");
@@ -39,12 +45,29 @@ public class Solution {
         }
         System.out.println();
     }
-    
-    private static int[][] printSpiralBF(int[][] mat, int rows, int cols, boolean ACW) {
-        return mat;
-    }
-    private static int[][] printSpiralOP(int[][] mat, int rows, int cols, boolean ACW) {
-        return mat;
+
+    private static List<Integer> printSpiral(int[][] matrix, int rows, int cols) {
+        List<Integer> result = new ArrayList<Integer>();
+        int top = 0, left = 0, bot = matrix.length - 1, right = matrix[0].length - 1;
+        while (top <= bot && left <= right) {
+            for (int i = left; i <= right; i++)
+                result.add(matrix[top][i]);
+            top++;
+            for (int i = top; i <= bot; i++)
+                result.add(matrix[i][right]);
+            right--;
+            if (top <= bot) {
+                for (int i = right; i >= left; i--)
+                    result.add(matrix[bot][i]);
+                bot--;
+            }
+            if (left <= right) {
+                for (int i = bot; i >= top; i--)
+                    result.add(matrix[i][left]);
+                left++;
+            }
+        }
+        return result;
     }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in); 
@@ -60,12 +83,8 @@ public class Solution {
                     matrix[i][j] = sc.nextInt();
                 }
             }
-            // int[][] resultBF = rotateMatrixBF(matrix, rows, cols, false);
-            // printMatrix(resultBF);
-            int[][] resultBF = printSpiralBF(matrix, rows, cols, true);
-            printMatrix(resultBF);
-            int[][] resultOP = printSpiralOP(matrix, cols, rows, true);
-            printMatrix(resultOP);
+            List<Integer> result = printSpiral(matrix, cols, rows);
+            printArrayList(result);
         }
         sc.close();
     }   

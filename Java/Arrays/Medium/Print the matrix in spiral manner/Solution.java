@@ -15,36 +15,6 @@ public class Solution {
         System.out.println();
         System.out.println();
     }
-    private static void printMatrix(int[][] matrix) {
-        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
-            System.out.println("[]");
-            return;
-        }
-
-        int rows = matrix.length;
-        int cols = matrix[0].length;
-        
-        // Find the maximum width of a number for alignment
-        int maxWidth = 0;
-        for (int[] row : matrix) {
-            for (int element : row) {
-                maxWidth = Math.max(maxWidth, String.valueOf(element).length());
-            }
-        }
-
-        for (int i = 0; i < rows; i++) {
-            System.out.print('[');
-            for (int j = 0; j < cols; j++) {
-                // Use printf with a dynamic width specifier
-                System.out.printf("%" + maxWidth + "d", matrix[i][j]);
-                if (j < cols - 1) {
-                    System.out.print(", ");
-                }
-            }
-            System.out.println(']');
-        }
-        System.out.println();
-    }
 
     private static List<Integer> printSpiral(int[][] matrix, int rows, int cols) {
         List<Integer> result = new ArrayList<Integer>();
